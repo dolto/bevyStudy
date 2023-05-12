@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use stody1::hello_world::*;
-
+ 
 fn main() {
     App::new()
     .add_plugins(DefaultPlugins)
