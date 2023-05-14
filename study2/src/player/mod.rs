@@ -1,5 +1,7 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
+use crate::enemies::Enemy;
+
 #[derive(Component)]
 pub struct Player {
 
@@ -47,7 +49,6 @@ pub fn sqawn_player(
 
 pub const PLAYER_SPEED:f32 = 500.0;
 pub const PLAYER_SIZE:f32 = 64.0;
-pub const NUMBER_OF_ENEMIES:usize = 4;
 
 pub fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
@@ -107,5 +108,30 @@ pub fn confine_player_movement(
         }
 
         player_transform.translation = translation;
+    }
+}
+
+pub fn enemy_hit_player(
+    mut commands: Commands,
+    mut player_query: Query<(Entity, &Transform), With<Player>>,
+    enemy_query: Query<&Transform, With<Enemy>>,
+    asset_server: Res<AssetServer>,
+    audio: Res<Audio>
+){
+    if let Ok((player_entity, player_transform)) = player_query.get_single_mut() {
+        for enemy_transform in enemy_query.iter() {
+            let distance = player_transform
+            .translation.distance(enemy_transform.translation);
+        //플레이어와 적의 거리를 구함
+            let player_radius = PLAYER_SIZE / 2.0;
+            let enemy_radius = crate::enemies::ENEMY_SIZE /2.0;
+            if distance < player_radius + enemy_radius{
+                println!("Enemy hit player! Game Over!");
+                let sound_effect = asset_server.load("audio/explosionCrunch_000.ogg");
+                audio.play(sound_effect);
+                commands.entity(player_entity).despawn(); //플레이어의 엔티티 번호를 죽인다
+                //유니티의 Destroy와 비슷한 개념인듯
+            }
+        }
     }
 }
