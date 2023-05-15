@@ -16,15 +16,25 @@ pub fn spawn_enemes(
     asset_server: Res<AssetServer>
 ){
     let window = window_query.get_single().unwrap();
-
+    let mut spawn_point_list: Vec<Vec3> = Vec::with_capacity(NUMBER_OF_ENEMIES);
     for _ in 0..NUMBER_OF_ENEMIES{
-        let random_x = random::<f32>() * window.width();
-        let random_y = random::<f32>() * window.height();
-
+        let mut random_x = random::<f32>() * window.width();
+        let mut random_y = random::<f32>() * window.height();
+        let mut transform = Transform::from_xyz(random_x, random_y, 0.0);
+        for point in spawn_point_list.iter(){
+            let mut distence = transform.translation.distance(point.clone());
+            while distence < ENEMY_SIZE{
+                random_x = random::<f32>() * window.width();
+                random_y = random::<f32>() * window.height();
+                transform = Transform::from_xyz(random_x, random_y, 0.0);
+                distence = transform.translation.distance(point.clone());
+            }
+        } 
+        spawn_point_list.push(transform.translation.clone());
         commands.spawn(
             (
                 SpriteBundle{
-                    transform: Transform::from_xyz(random_x, random_y, 0.0),
+                    transform: transform,
                     texture: asset_server.load("sprites/ball_red_large.png"),
                     ..default()
                 },
@@ -62,7 +72,7 @@ pub fn update_enemy_direction(
 
     let mut other_translation_list: Vec<(Vec3, Vec2, Entity)> = Vec::with_capacity(NUMBER_OF_ENEMIES);
 
-    for (transform, mut enemy, entity) in enemy_query.iter_mut(){
+    for (transform, enemy, entity) in enemy_query.iter_mut(){
         let translation = transform.translation;
         other_translation_list.push((translation, enemy.directoion, entity));
     }
@@ -85,8 +95,16 @@ pub fn update_enemy_direction(
             if entity.eq(other_entity){
                 continue;
             }
-            let distance = transform.translation.distance(other_translation.clone());
+            let distance = translation.distance(other_translation.clone());
             if distance < ENEMY_SIZE {
+                // while distance < ENEMY_SIZE {
+                //     let mut temp_direction = enemy.directoion + other_direction.clone();
+                //     temp_direction = temp_direction.normalize();
+                //     translation -= Vec3::new(temp_direction.x, temp_direction.y, 0.0);
+                //     distance = translation.distance(other_translation.clone());
+                // } //충돌 판정
+                //let mut temp_direction = enemy.directoion + other_direction.clone();
+                //temp_direction = temp_direction.normalize();
                 enemy.directoion = other_direction.clone();
                 direction_changed = true;
             }
