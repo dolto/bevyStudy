@@ -9,6 +9,7 @@ pub struct Enemy{
 pub const NUMBER_OF_ENEMIES: usize = 7;
 pub const ENEMY_SPEED:f32 = 200.0;
 pub const ENEMY_SIZE:f32 = 64.0;
+pub const ENEMY_SPAWN_TIME:f32 = 5.0;
 
 pub fn spawn_enemes(
     mut commands: Commands,
@@ -72,10 +73,10 @@ pub fn update_enemy_direction(
 
     let mut other_translation_list: Vec<(Vec3, Vec2, Entity)> = Vec::with_capacity(NUMBER_OF_ENEMIES);
 
-    for (transform, enemy, entity) in enemy_query.iter_mut(){
+    /*for (transform, enemy, entity) in enemy_query.iter_mut(){
         let translation = transform.translation;
         other_translation_list.push((translation, enemy.directoion, entity));
-    }
+    }*/
     //비교할 데이터를 수집한 후
 
     for (transform, mut enemy, entity) in enemy_query.iter_mut(){
@@ -91,7 +92,7 @@ pub fn update_enemy_direction(
             direction_changed = true;
         }
 
-        for (other_translation, other_direction, other_entity) in other_translation_list.iter(){
+        /*for (other_translation, other_direction, other_entity) in other_translation_list.iter(){
             if entity.eq(other_entity){
                 continue;
             }
@@ -108,7 +109,7 @@ pub fn update_enemy_direction(
                 enemy.directoion = other_direction.clone();
                 direction_changed = true;
             }
-        }
+        }*/
         //여기에서 체크함
         
         if direction_changed{

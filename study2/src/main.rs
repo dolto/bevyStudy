@@ -3,12 +3,16 @@ use study2::player::*;
 use study2::camera::*;
 use study2::enemies::*;
 use study2::star::*;
+use study2::event_controll::*;
 
 fn main() {
     App::new()
     .add_plugins(DefaultPlugins)
     .init_resource::<Score>() //리소스를 넣는 방법
     .init_resource::<StarSpawnTimer>()
+    .init_resource::<EnemySpawnTimer>()
+    .init_resource::<HighScores>()
+    .add_event::<GameOver>()
     .add_startup_system(sqawn_player)
     .add_startup_system(spawn_camera)
     .add_startup_system(spawn_enemes)
@@ -23,6 +27,12 @@ fn main() {
     .add_system(update_score)
     .add_system(tick_star_spawn_timer)
     .add_system(spawn_stars_over_time)
+    .add_system(tick_enemy_spawn_timer)
+    .add_system(spawn_enemy_over_time)
+    .add_system(exit_game)
+    .add_system(handle_game_over)
+    .add_system(update_high_scores)
+    .add_system(high_scores_updated)
     .run();
 }
 

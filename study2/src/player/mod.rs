@@ -1,6 +1,9 @@
-use bevy::{prelude::*, window::PrimaryWindow};
+use std::{fs::{File, OpenOptions}, io::{Read, Write}};
 
-use crate::{enemies::Enemy, star::{Star, STAR_SIZE, spawn_star}};
+use bevy::{prelude::*, window::PrimaryWindow};
+use rand::random;
+
+use crate::{enemies::{Enemy, ENEMY_SPAWN_TIME, ENEMY_SIZE}, star::{Star, STAR_SIZE, spawn_star}, event_controll::GameOver};
 
 #[derive(Component)]
 pub struct Player { }
@@ -15,6 +18,73 @@ impl Default for Score {
     }
 }
 
+#[derive(Resource, Debug)]
+pub struct HighScores{
+    pub scores: Vec<(String, u32)>
+}
+impl Default for HighScores{
+    fn default() -> HighScores {
+        let save_file_open_try = File::open("data.save");
+        let mut save_file = match save_file_open_try {
+            Err(_) => {
+                match File::create("data.save") {
+                    Err(_) => panic!("file create is faild!"),
+                    Ok(_) => {
+                        File::open("data.save").unwrap()
+                    }
+                }
+            },
+            Ok(f) => f
+        };
+        let mut data = String::new();
+        save_file.read_to_string(&mut data).unwrap();
+
+        let data_list = data.split("\n").collect::<Vec<&str>>();
+        let mut save_data: Vec<(String, u32)> = Vec::with_capacity(data_list.len());
+        for db in data_list{
+            if db.eq(""){
+                continue;
+            } 
+            let ele = db.split(" ").collect::<Vec<&str>>();
+            save_data.push((ele[0].to_string(), match ele[1].parse::<u32>() {
+                Ok(u) => u,
+                Err(_) => 0,
+            }));
+        }
+        HighScores { scores: save_data}
+    }
+}
+impl HighScores {
+    pub fn save(&mut self){
+        //println!("save is process...");
+        // let mut save_file = OpenOptions::new()
+        // .append(true).open("data.save").expect(
+        //     "cannot open file"
+        // );
+        let mut save_file = 
+        match File::create("data.save"){
+            Err(_) => panic!("file create is faild!"),
+            Ok(f) => f
+        };
+
+        self.scores.sort_by(|(_, a2), (_, b2)| b2.cmp(a2));
+
+        for (name, score) in self.scores.iter(){
+            let data_string = format!("{} {}\n", name, score);
+            println!("{}",data_string);
+            save_file.write(data_string.as_bytes()).expect("write failed!");
+        }
+    }
+}
+
+pub fn high_scores_updated(
+    high_scores: Res<HighScores>
+){
+    if high_scores.is_changed() {
+        println!("High Scores: {:?}", high_scores);
+    }
+}
+
 #[derive(Resource)]
 pub struct StarSpawnTimer {
     pub timer: Timer,
@@ -22,6 +92,16 @@ pub struct StarSpawnTimer {
 impl Default for StarSpawnTimer {
     fn default() -> StarSpawnTimer {
         StarSpawnTimer { timer: Timer::from_seconds(STAR_SPAWN_TIME, TimerMode::Repeating) }
+    }
+}
+
+#[derive(Resource)]
+pub struct EnemySpawnTimer{
+    pub timer: Timer
+}
+impl Default for EnemySpawnTimer{
+    fn default() -> EnemySpawnTimer {
+        EnemySpawnTimer { timer: Timer::from_seconds(ENEMY_SPAWN_TIME, TimerMode::Repeating) }
     }
 }
 
@@ -132,11 +212,12 @@ pub fn confine_player_movement(
 
 pub fn enemy_hit_player(
     mut commands: Commands,
+    mut game_over_event_witer: EventWriter<GameOver>,
     mut player_query: Query<(Entity, &Transform), With<Player>>,
     enemy_query: Query<&Transform, With<Enemy>>,
     asset_server: Res<AssetServer>,
     audio: Res<Audio>,
-    mut score: ResMut<Score>
+    score: Res<Score>
 ){
     if let Ok((player_entity, player_transform)) = player_query.get_single_mut() {
         for enemy_transform in enemy_query.iter() {
@@ -149,7 +230,7 @@ pub fn enemy_hit_player(
                 println!("Enemy hit player! Game Over!");
                 let sound_effect = asset_server.load("audio/explosionCrunch_000.ogg");
                 audio.play(sound_effect);
-                score.value = 0;
+                game_over_event_witer.send(GameOver { score: score.value });
                 commands.entity(player_entity).despawn(); //플레이어의 엔티티 번호를 죽인다
                 //유니티의 Destroy와 비슷한 개념인듯
             }
@@ -209,5 +290,43 @@ pub fn spawn_stars_over_time(
     if star_spawn_timer.timer.finished() { //타이머가 0으로 갔을 경우 모드가 리피트임으로 초기화 됨
         let window = window_query.get_single().unwrap();
         spawn_star(&asset_server, &mut commands, window.width(), window.height());
+    }
+}
+
+pub fn tick_enemy_spawn_timer(
+    mut enemy_spawn_timer: ResMut<EnemySpawnTimer>,
+    time: Res<Time>
+){
+    enemy_spawn_timer.timer.tick(time.delta());
+}
+
+pub fn spawn_enemy_over_time(
+    mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    player_query: Query<&Transform, With<Player>>,
+    asset_server: Res<AssetServer>,
+    enemy_spawn_timer: Res<EnemySpawnTimer>
+){
+    if enemy_spawn_timer.timer.finished() {
+        if let Ok(player_transform) = player_query.get_single(){
+            let window = window_query.get_single().unwrap();
+            let mut random_x = random::<f32>() * window.width();
+            let mut random_y = random::<f32>() * window.height();
+            let mut distance = player_transform.translation.distance(Vec3::new(random_x, random_y, 0.0));
+            while distance < PLAYER_SIZE / 2.0 + ENEMY_SIZE / 2.0 {
+                random_x = random::<f32>() * window.width();
+                random_y = random::<f32>() * window.height();
+                distance = player_transform.translation.distance(Vec3::new(random_x, random_y, 0.0));
+            }
+
+            commands.spawn((
+                SpriteBundle{
+                    transform: Transform::from_xyz(random_x, random_y, 0.0),
+                    texture: asset_server.load("sprites/ball_red_large.png"),
+                    ..default()
+                },
+                Enemy { directoion: Vec2::new(random::<f32>(), random::<f32>()).normalize() }
+            ));
+        }
     }
 }
