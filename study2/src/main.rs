@@ -1,38 +1,28 @@
+//mod enemies;
+//메인에 있어도 되고, 어느 파일에 있어도 상대경로로 작동한다.
+/***
+ * 또한 현재 되어있는 형태로 파일을(모듈) 나누는 것이 아니라
+ * 컴포넌트, 이벤트, 리소스, 시스템으로 나누는 것이 좀 더 표준적이고
+ * use낭비를 줄여준다.
+ * 
+ * 좀 더 세분화 하여 사용한다면, 지금처럼 각 개념을 중심으로
+ * 컴포넌트, 리소스, 시스템을 분할하는 것이 좀 더 깔끔하다.
+ */
 use bevy::prelude::*;
-use study2::player::*;
-use study2::camera::*;
-use study2::enemies::*;
-use study2::star::*;
-use study2::event_controll::*;
+use study2::camera::CameraPlugin;
+use study2::enemies::EnemyPlugin;
+use study2::player::PlayerPlugin;
+use study2::event_controll::EventControllPlugin;
+use study2::star::StarPlugin;
 
 fn main() {
     App::new()
     .add_plugins(DefaultPlugins)
-    .init_resource::<Score>() //리소스를 넣는 방법
-    .init_resource::<StarSpawnTimer>()
-    .init_resource::<EnemySpawnTimer>()
-    .init_resource::<HighScores>()
-    .add_event::<GameOver>()
-    .add_startup_system(sqawn_player)
-    .add_startup_system(spawn_camera)
-    .add_startup_system(spawn_enemes)
-    .add_startup_system(sqawn_stars)
-    .add_system(player_movement)
-    .add_system(confine_player_movement)
-    .add_system(enemy_movement)
-    .add_system(update_enemy_direction)
-    .add_system(confine_enemy_movement)
-    .add_system(enemy_hit_player)
-    .add_system(star_hit_player)
-    .add_system(update_score)
-    .add_system(tick_star_spawn_timer)
-    .add_system(spawn_stars_over_time)
-    .add_system(tick_enemy_spawn_timer)
-    .add_system(spawn_enemy_over_time)
-    .add_system(exit_game)
-    .add_system(handle_game_over)
-    .add_system(update_high_scores)
-    .add_system(high_scores_updated)
+    .add_plugin(EventControllPlugin) //플러그인들이 해당이벤트에 의존 하는경우 먼저 수행되어야 오류가 안남
+    .add_plugin(CameraPlugin)
+    .add_plugin(EnemyPlugin)
+    .add_plugin(PlayerPlugin)
+    .add_plugin(StarPlugin)
     .run();
 }
 

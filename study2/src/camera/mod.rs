@@ -1,21 +1,12 @@
-use bevy::{prelude::*, window::PrimaryWindow};
+use bevy::prelude::*;
+use self::{systems::*};
 
-pub fn spawn_camera(
-    mut commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-){
-    let window = window_query.get_single().unwrap();
+mod systems;
 
-    commands.spawn(
-        Camera2dBundle{
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
-            ..default()
-        }
-    );
+pub struct CameraPlugin;
+impl Plugin for CameraPlugin{
+    fn build(&self, app: &mut App) {
+        app
+        .add_startup_system(spawn_camera);
+    }
 }
-
-//카메라
-/***
- * 카메라는 유니티랑 비슷한 개념으로 bevy 세상을 찍는 역할을 함
- * 아직 서브 카메라나 메인카메라가 존재하는지 잘 모르는 상태
- */
