@@ -1,5 +1,9 @@
 use bevy::prelude::*;
+use crate::app_state::AppState;
+
 use self::{resources::*, systems::*};
+
+use super::SimulationState;
 
 pub mod components;
 mod systems;
@@ -30,7 +34,10 @@ impl Plugin for PlayerPlugin{
         .init_resource::<HighScores>()
         //.configure_set(MovementSystemSet.before(ConfinementSystemSet))
         .configure_set(PlayerSystemSet::Movement.before(PlayerSystemSet::Confinemet))
-        .add_startup_system(sqawn_player)
+        .add_system(sqawn_player.in_schedule(OnEnter(AppState::Game)))
+        .add_system(insert_score.in_schedule(OnEnter(AppState::Game)))
+        .add_system(despawn_player.in_schedule(OnExit(AppState::Game)))
+        .add_system(remove_score.in_schedule(OnExit(AppState::Game)))
         //.add_system(player_movement/*.before(confine_player_movement)*/)
         //.add_system(confine_player_movement.after(player_movement))
         // .add_systems(
@@ -41,13 +48,26 @@ impl Plugin for PlayerPlugin{
         // )
         // .add_system(player_movement.in_set(MovementSystemSet))
         // .add_system(confine_player_movement.in_set(ConfinementSystemSet))
-        .add_system(player_movement.in_set(PlayerSystemSet::Movement))
-        .add_system(confine_player_movement.in_set(PlayerSystemSet::Confinemet))
+        .add_system(player_movement.in_set(PlayerSystemSet::Movement)
+                .run_if(in_state(AppState::Game))
+                .run_if(in_state(SimulationState::Running)))
+        .add_system(confine_player_movement.in_set(PlayerSystemSet::Confinemet)
+                .run_if(in_state(AppState::Game))
+                .run_if(in_state(SimulationState::Running)))
         //위에 있는 configure_set으로 함수의 수행 순서를 정의함
-        .add_system(enemy_hit_player)
-        .add_system(star_hit_player)
-        .add_system(update_score)
+        // .add_system(enemy_hit_player)
+        // .add_system(star_hit_player)
+        //.add_system(update_score)
         //.add_system(update_high_scores)
-        .add_system(high_scores_updated);
+        //.add_system(high_scores_updated)
+        .add_systems(
+            (
+                enemy_hit_player,
+                star_hit_player,
+                high_scores_updated,
+                update_score
+            ).in_set(OnUpdate(AppState::Game))
+            .in_set(OnUpdate(SimulationState::Running))
+        );
     }
 }

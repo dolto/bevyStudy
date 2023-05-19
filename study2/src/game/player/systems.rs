@@ -1,5 +1,5 @@
 use bevy::{prelude::*, window::PrimaryWindow};
-use crate::{event_controll::events::GameOver, star::{components::Star, STAR_SIZE}, enemies::{components::Enemy, *}};
+use crate::{game::event_controll::events::GameOver, game::star::{components::Star, STAR_SIZE}, game::enemies::{components::Enemy, *}};
 use super::{components::Player, resources::{HighScores, Score}, *};
 
 
@@ -30,6 +30,15 @@ pub fn sqawn_player(
             Player { },
         )
     );
+}
+
+pub fn despawn_player(
+    mut commands: Commands,
+    player_query: Query<Entity, With<Player>>
+){
+    if let Ok(player_entity) = player_query.get_single(){
+        commands.entity(player_entity).despawn();
+    }
 }
 
 //bevy에서 수행되는 메인 윈도우창은 PrimaryWindow를 포함하고 있기 때문에
@@ -177,4 +186,16 @@ pub fn update_score(
     if score.is_changed() {
         print!("Player Score is {}  ", score.value.to_string());
     }
+}
+
+pub fn insert_score(
+    mut commands: Commands
+){
+    commands.insert_resource(Score::default())
+}
+
+pub fn remove_score(
+    mut commands: Commands
+){
+    commands.remove_resource::<Score>();
 }

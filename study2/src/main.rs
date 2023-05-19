@@ -9,22 +9,22 @@
  * 컴포넌트, 리소스, 시스템을 분할하는 것이 좀 더 깔끔하다.
  */
 use bevy::prelude::*;
-use study2::camera::CameraPlugin;
-use study2::enemies::EnemyPlugin;
-use study2::player::PlayerPlugin;
-use study2::event_controll::EventControllPlugin;
-use study2::star::StarPlugin;
+use study2::app_state::AppState;
+use study2::game::GamePlugin;
+use study2::main_menu::MainMenuPlugin;
 
 fn main() {
     App::new()
+    //Bevy Plugins
     .add_plugins(DefaultPlugins)
-    .add_plugin(EventControllPlugin) //플러그인들이 해당이벤트에 의존 하는경우 먼저 수행되어야 오류가 안남
-    .add_plugin(CameraPlugin)
-    .add_plugin(EnemyPlugin)
-    .add_plugin(PlayerPlugin)
-    .add_plugin(StarPlugin)
+    .add_state::<AppState>()
+    //My Plugins
+    .add_plugin(MainMenuPlugin)
+    .add_plugin(GamePlugin)
     .run();
 }
+
+
 
 /***
  * plugins: 수행하는 모든 리소스, 시스템등을 구현하고 집어넣어서 한번에 수행하는 패키지
@@ -48,11 +48,17 @@ fn main() {
  */
 
 
-/*
+/***
  * Order 시스템으로 Bevy의 스케줄링 알고리즘으로 프레임마다 수행되는 함수의 순서가 다를 수 있음을
  * 알려줌
  * 최적화를 위한 알고리즘이지만, 이를 해결하기 위해 System Ordering 이라는 개념을 사용함
  * 
  * 당연하지만 이런 Ordering은 애초에 병렬 수행이 어려운 함수들에게만 대상으로 하지 않으면
  * 성능에 영향을 끼침
+ */
+
+/***
+ * States 기능
+ * 유니티의 씬 기능과 같이, 특정 상태 혹은 특정 상태집합에 있는 동안 수행하는 시스템이나 기능들을
+ * 설정할 수 있다.
  */

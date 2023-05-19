@@ -14,6 +14,14 @@ pub fn sqawn_stars(
         spawn_star(&asset_server, &mut commands, window.width(), window.height());
     }
 }
+pub fn despawn_stars(
+    mut commands: Commands,
+    star_query: Query<Entity, With<Star>>
+){
+    for star_entity in star_query.iter(){
+        commands.entity(star_entity).despawn();
+    }
+}
 
 pub fn spawn_star(asset_server: &Res<AssetServer>,commands: &mut Commands,width: f32, height: f32){
     let random_x = random::<f32>() * width;
