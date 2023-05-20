@@ -48,12 +48,13 @@ impl Plugin for PlayerPlugin{
         // )
         // .add_system(player_movement.in_set(MovementSystemSet))
         // .add_system(confine_player_movement.in_set(ConfinementSystemSet))
-        .add_system(player_movement.in_set(PlayerSystemSet::Movement)
-                .run_if(in_state(AppState::Game))
-                .run_if(in_state(SimulationState::Running)))
-        .add_system(confine_player_movement.in_set(PlayerSystemSet::Confinemet)
-                .run_if(in_state(AppState::Game))
-                .run_if(in_state(SimulationState::Running)))
+        .add_systems(
+            (
+                player_movement.in_set(PlayerSystemSet::Movement),
+                confine_player_movement.in_set(PlayerSystemSet::Confinemet)
+            ).in_set(OnUpdate(AppState::Game))
+            .in_set(OnUpdate(SimulationState::Running))
+        )
         //위에 있는 configure_set으로 함수의 수행 순서를 정의함
         // .add_system(enemy_hit_player)
         // .add_system(star_hit_player)

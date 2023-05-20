@@ -20,7 +20,9 @@ impl Plugin for GamePlugin{
     fn build(&self, app: &mut App){
         app
         .add_state::<SimulationState>()
-        .add_plugin(EventControllPlugin) //플러그인들이 해당이벤트에 의존 하는경우 먼저 수행되어야 오류가 안남
+        .add_system(pause_simulation.in_schedule(OnEnter(AppState::Game)))
+        .add_system(resume_simulation.in_schedule(OnExit(AppState::Game)))
+        .add_plugin(EventControllPlugin)
         .add_plugin(CameraPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(PlayerPlugin)
@@ -31,7 +33,7 @@ impl Plugin for GamePlugin{
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum SimulationState {
-    Running,
     #[default]
+    Running,
     Paused
 }

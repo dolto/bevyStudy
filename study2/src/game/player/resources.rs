@@ -67,6 +67,9 @@ impl HighScores {
             println!("{}",data_string);
             save_file.write(data_string.as_bytes()).expect("write failed!");
         }
+        // self.scores.iter().for_each(|(n, v)| {
+        //     print!("{}: {}",n,v);
+        // });
     }
 }
 

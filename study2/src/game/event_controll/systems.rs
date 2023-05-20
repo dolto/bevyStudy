@@ -22,11 +22,11 @@ pub fn exit_game(
 
 pub fn handle_game_over(
     mut game_over_event_reader: EventReader<GameOver>,
-    mut commands: Commands
+    mut next_app_state: ResMut<NextState<AppState>>
 ){
     for event in game_over_event_reader.iter(){
         println!("Your final score is : {}", event.score);
-        commands.insert_resource(NextState(Some(AppState::GameOver)));
+        next_app_state.set(AppState::GameOver);
     }
     //이벤트는 동시에 여러번 일어날 수 있으므로 반복자를 고수하는게 좋음
 }
@@ -43,27 +43,28 @@ pub fn update_high_scores(
 }
 
 pub fn translation_to_game_state(
-    mut commands: Commands,
+    mut next_app_state: ResMut<NextState<AppState>>,
     keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>
 ){
     if keyboard_input.just_pressed(KeyCode::G){
         if app_state.0 != AppState::Game {
-            commands.insert_resource(NextState(Some(AppState::Game)));
+            next_app_state.set(AppState::Game);
             println!("Entered AppState::Game");
         }
     }
 }
 
 pub fn translation_to_main_menu_state(
-    mut commands: Commands,
+    mut next_app_state: ResMut<NextState<AppState>>,
+    mut next_simulation_state: ResMut<NextState<SimulationState>>,
     keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>
 ){
     if keyboard_input.just_pressed(KeyCode::M){
         if app_state.0 != AppState::MainMenu {
-            commands.insert_resource(NextState(Some(AppState::MainMenu)));
-            commands.insert_resource(NextState(Some(SimulationState::Paused)));
+            next_app_state.set(AppState::MainMenu);
+            next_simulation_state.set(SimulationState::Paused);
             println!("Entered AppState::MainMenu");
         }
     }
