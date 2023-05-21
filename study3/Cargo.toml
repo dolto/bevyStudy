@@ -1,0 +1,16 @@
+[package]
+name = "study3"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+bevy = "0.10.1"
+rand = "0.8.5"
+bevy_web = "0.0.1"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
