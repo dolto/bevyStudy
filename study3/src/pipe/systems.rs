@@ -26,7 +26,7 @@ fn pip_spawn(
     commands.spawn((
         Pip {
             width: 64.0,
-            height: bottum_size
+            height: bottum_size - 150.0
         },
         SpriteBundle {
             texture: asset_server.load("sprites/dangerPlant.png"),
@@ -42,7 +42,7 @@ fn pip_spawn(
     commands.spawn((
         Pip {
             width: 64.0,
-            height: top_size
+            height: top_size - 150.0
         },
         SpriteBundle {
             texture: asset_server.load("sprites/dangerPlant.png"),

@@ -1,8 +1,8 @@
-use std::{fs::{OpenOptions, create_dir_all}, io::{Write}};
+//use std::{fs::{OpenOptions, create_dir_all}, io::{Write}};
 
 use bevy::prelude::*;
 
-use super::{resources::Score, components::ScoreBord};
+use super::{resources::Score, components::ScoreBord, set_item_to_web_storage};
 
 pub fn score_up(
     time:Res<Time>,
@@ -63,17 +63,22 @@ pub fn score_borad_update(
 pub fn save_score(
     mut score: ResMut<Score>
 ){
-    create_dir_all("./savedata").expect("폴더 생성 실패!");
-    let mut f = match OpenOptions::new().write(true).create(true).open("./savedata/save.csv") {
-        Ok(e) => e,
-        Err(_) => {
-            panic!("파일 생성 실패!");
-        },
-    };
+    // create_dir_all("./savedata").expect("폴더 생성 실패!");
+    // let mut f = match OpenOptions::new().write(true).create(true).open("./savedata/save.csv") {
+    //     Ok(e) => e,
+    //     Err(_) => {
+    //         panic!("파일 생성 실패!");
+    //     },
+    // };
     let sc = score.score;
     score.score_list.push(sc);
     score.score_list.sort_by(|a, b| b.partial_cmp(a).unwrap());
+    let mut score_save_db = String::new();
     for s in score.score_list.iter(){
-        f.write_all(format!("{:.2}\n",s).as_bytes()).unwrap();
+        //f.write_all(format!("{:.2}\n",s).as_bytes()).unwrap();
+        let mut sd = s.to_string();
+        sd.push(',');
+        score_save_db.push_str(&sd);
     }
+    set_item_to_web_storage("score", &score_save_db);
 }

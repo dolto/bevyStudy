@@ -914,12 +914,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_web"
-version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e9c49b61a57511567be1bc71717a8e25db9a4275ec04c433eb40071eedea83e0"
-
-[[package]]
 name = "bevy_window"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2740,8 +2734,9 @@ name = "study3"
 version = "0.1.0"
 dependencies = [
  "bevy",
- "bevy_web",
  "rand",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
