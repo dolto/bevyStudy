@@ -59,11 +59,13 @@ fn pip_spawn(
 
 pub fn despawn_pip(
     mut commands:Commands,
-    pip_query: Query<Entity, With<Pip>>
+    pip_query: Query<Entity, With<Pip>>,
+    mut pip_move_speed: ResMut<PipMoveSpeed>
 ){
     for pip_entity in pip_query.iter(){
         commands.entity(pip_entity).despawn();
     }
+    pip_move_speed.x_speed = STARTPIPSPEED;
 }
 
 pub fn tick_pip_spawn_timer(
@@ -71,7 +73,7 @@ pub fn tick_pip_spawn_timer(
     pip_move_speed: Res<PipMoveSpeed>,
     time:Res<Time>
 ){
-    let add_time = time.delta_seconds() * STARTPIPSPEED / pip_move_speed.x_speed / 1.5;
+    let add_time = time.delta_seconds() * pip_move_speed.x_speed / STARTPIPSPEED;
     pip_spawn_timer.timer.tick(Duration::from_secs_f32(add_time) );
 }
 
@@ -80,11 +82,11 @@ pub fn pip_spawn_timer_finished(
     window_query: Query<&Window ,With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
     pip_spawn_timer: Res<PipSpawnTimer>,
-    time:Res<Time>,
     mut pip_move_speed: ResMut<PipMoveSpeed>
 ){
     if pip_spawn_timer.timer.finished() {
-        pip_move_speed.x_speed += time.delta_seconds() * 2.0;
+        print!("속도 증가");
+        pip_move_speed.x_speed += 30.0;
         pip_spawn(&mut commands, &window_query, &asset_server);
     }
 }

@@ -9,6 +9,7 @@ mod camera;
 use bevy::prelude::*;
 use bird::BirdPlugin;
 use events::EventPlugin;
+use menu::MenuPlugin;
 use pipe::PipPlugin;
 use camera::camera_spawn;
 use score::ScorePlugin;
@@ -23,6 +24,7 @@ fn main() {
     .add_plugin(BirdPlugin)
     .add_plugin(PipPlugin)
     .add_plugin(ScorePlugin)
+    .add_plugin(MenuPlugin)
     .run();
 }
 /***

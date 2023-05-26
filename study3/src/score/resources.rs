@@ -1,9 +1,4 @@
-use std::{fs::{OpenOptions, create_dir_all, canonicalize}, io::Read, path::{PathBuf}};
-use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
-use web_sys;
 use bevy::prelude::*;
-
 use super::get_item_from_web_storage;
 
 #[derive(Resource)]

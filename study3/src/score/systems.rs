@@ -81,4 +81,5 @@ pub fn save_score(
         score_save_db.push_str(&sd);
     }
     set_item_to_web_storage("score", &score_save_db);
+    score.score = 0.0;
 }
