@@ -57,11 +57,11 @@ pub fn spawn_j_mino(
                 let mut pos = Vec3::new(0.0,0.0,0.0);
                 spawn_mino(parent, pos.clone());
                 pos.x -= 30.0;
+                pos.y -= 30.0;
                 spawn_mino(parent, pos.clone());
                 pos.x += 30.0;
-                pos.y += 30.0;
                 spawn_mino(parent, pos.clone());
-                pos.y += 30.0;
+                pos.y += 60.0;
                 spawn_mino(parent, pos.clone());
             }
         )
@@ -90,11 +90,11 @@ pub fn spawn_l_mino(
                 let mut pos = Vec3::new(0.0,0.0,0.0);
                 spawn_mino(parent, pos.clone());
                 pos.x += 30.0;
+                pos.y += 30.0;
                 spawn_mino(parent, pos.clone());
                 pos.x -= 30.0;
-                pos.y += 30.0;
                 spawn_mino(parent, pos.clone());
-                pos.y += 30.0;
+                pos.y += 60.0;
                 spawn_mino(parent, pos.clone());
             }
         )
@@ -154,9 +154,9 @@ pub fn spawn_i_mino(
             |parent| {
                 let mut pos = Vec3::new(0.0,0.0,0.0);
                 spawn_mino(parent, pos.clone());
-                pos.y += 30.0;
+                pos.y -= 30.0;
                 spawn_mino(parent, pos.clone());
-                pos.y += 30.0;
+                pos.y += 60.0;
                 spawn_mino(parent, pos.clone());
                 pos.y += 30.0;
                 spawn_mino(parent, pos.clone());
@@ -225,6 +225,38 @@ pub fn spawn_s_mino(
                 pos.y += 30.0;
                 spawn_mino(parent, pos.clone());
                 pos.x += 30.0;
+                spawn_mino(parent, pos.clone());
+            }
+        )
+        ;
+
+        //println!("{}", )
+    }
+}
+
+pub fn spawn_t_mino(
+    mut commands: Commands,
+    main_window: Query<&Window, With<PrimaryWindow>>
+){
+    if let Ok(window) = main_window.get_single(){
+        let mut on_position = Vec3::new(window.width() / 2.0, window.height(), 0.0);
+        
+        on_position.y -= 120.0;
+        commands.spawn(
+            (
+                TransformBundle::from(Transform::from_translation(on_position)),
+                Mino { is_controll : true}
+            )
+        )
+        .with_children(
+            |parent| {
+                let mut pos = Vec3::new(0.0,0.0,0.0);
+                spawn_mino(parent, pos.clone());
+                pos.x -= 30.0;
+                spawn_mino(parent, pos.clone());
+                pos.x += 60.0;
+                spawn_mino(parent, pos.clone());
+                pos.y -= 30.0;
                 spawn_mino(parent, pos.clone());
             }
         )
