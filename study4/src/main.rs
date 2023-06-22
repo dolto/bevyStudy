@@ -103,52 +103,40 @@ pub fn spawn_mino(
     let center = (SIDE_SIZE / 2) as i32;
     match mino_selector.selecte_list[selecter] {
         MinoType::I => {
-            spawn_block(&mut commands, 0, center, &main_window, &texture, [(-2,2), (2,2), (2,-2), (-2,2)]);
-            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,1)]);
+            spawn_block(&mut commands, 0, center, &main_window, &texture, [(-2,2), (2,2), (2,-2), (-2,-2)]);
+            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,-1)]);
             spawn_block(&mut commands, 2, center, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
-            spawn_block(&mut commands, 3, center, &main_window, &texture, [(2,-2), (-2,-2), (-2,2), (2,-2)]);
+            spawn_block(&mut commands, 3, center, &main_window, &texture, [(1,-1), (-1,-1), (-1,1), (1,1)]);
         },
         MinoType::J => {
-            spawn_block(&mut commands, 0, center + 1, &main_window, &texture, [(-2,2), (2,2), (2,-2), (-2,2)]);
-            spawn_block(&mut commands, 1, center + 1, &main_window, &texture, [(-1,1), (1,1), (1,-1), (-1,1)]);
+            spawn_block(&mut commands, 0, center + 1, &main_window, &texture, [(-2,2), (2,2), (2,-2), (-2,-2)]);
+            spawn_block(&mut commands, 1, center + 1, &main_window, &texture, [(-1,1), (1,1), (1,-1), (-1,-1)]);
             spawn_block(&mut commands, 2, center + 1, &main_window, &texture, [(0,0), (0,0), (0,0), (0,0)]);
             spawn_block(&mut commands, 2, center, &main_window, &texture,[(-1,-1), (-1,1), (1,1), (1,-1)]);
         },
         MinoType::L => {
-            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-2,2), (2,2), (2,-2), (-2,2)]);
-            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,1)]);
+            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-2,2), (2,2), (2,-2), (-2,-2)]);
+            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,-1)]);
             spawn_block(&mut commands, 2, center, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
             spawn_block(&mut commands, 2, center + 1, &main_window, &texture,[(1,1), (1,-1), (-1,-1), (-1,1)]);
         },
         MinoType::S => {
-            // spawn_block(&mut commands, 0, center+2, &main_window, &texture);
-            // spawn_block(&mut commands, 0, center+1, &main_window, &texture);
-            // spawn_block(&mut commands, 1, center+1, &main_window, &texture);
-            // spawn_block(&mut commands, 1, center, &main_window, &texture);
-            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-2,2), (2,2), (2,-2), (-2,2)]);
-            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,1)]);
-            spawn_block(&mut commands, 2, center, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
-            spawn_block(&mut commands, 2, center + 1, &main_window, &texture,[(1,1), (1,-1), (-1,-1), (-1,1)]);
+            spawn_block(&mut commands, 0, center+2, &main_window, &texture, [(0,2), (2,0), (0,-2), (-2,0)]);
+            spawn_block(&mut commands, 0, center+1, &main_window, &texture, [(-1,1), (1,1), (1,-1), (-1,-1)]);
+            spawn_block(&mut commands, 1, center+1, &main_window, &texture, [(0,0), (0,0), (0,0), (0,0)]);
+            spawn_block(&mut commands, 1, center, &main_window, &texture, [(-1,-1), (-1,1), (1,1), (1,-1)]);
         },
         MinoType::Z => {
-            // spawn_block(&mut commands, 0, center, &main_window, &texture);
-            // spawn_block(&mut commands, 0, center+1, &main_window, &texture);
-            // spawn_block(&mut commands, 1, center+1, &main_window, &texture);
-            // spawn_block(&mut commands, 1, center+2, &main_window, &texture);
-            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-2,2), (2,2), (2,-2), (-2,2)]);
-            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,1)]);
-            spawn_block(&mut commands, 2, center, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
-            spawn_block(&mut commands, 2, center + 1, &main_window, &texture,[(1,1), (1,-1), (-1,-1), (-1,1)]);
+            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-2,0), (0,2), (2,0), (0,-2)]);
+            spawn_block(&mut commands, 0, center+1, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,-1)]);
+            spawn_block(&mut commands, 1, center+1, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
+            spawn_block(&mut commands, 1, center+2, &main_window, &texture,[(1,1), (1,-1), (-1,-1), (-1,1)]);
         },
         MinoType::T => {
-            // spawn_block(&mut commands, 0, center, &main_window, &texture);
-            // spawn_block(&mut commands, 0, center+1, &main_window, &texture);
-            // spawn_block(&mut commands, 0, center+2, &main_window, &texture);
-            // spawn_block(&mut commands, 1, center+1, &main_window, &texture);
-            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-2,2), (2,2), (2,-2), (-2,2)]);
-            spawn_block(&mut commands, 1, center, &main_window, &texture,[(-1,1), (1,1), (1,-1), (-1,1)]);
-            spawn_block(&mut commands, 2, center, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
-            spawn_block(&mut commands, 2, center + 1, &main_window, &texture,[(1,1), (1,-1), (-1,-1), (-1,1)]);
+            spawn_block(&mut commands, 0, center, &main_window, &texture,[(-1,-1), (-1,1), (1,1), (1,-1)]);
+            spawn_block(&mut commands, 0, center+1, &main_window, &texture,[(0,0), (0,0), (0,0), (0,0)]);
+            spawn_block(&mut commands, 0, center+2, &main_window, &texture,[(1,1),(1,-1),(-1,-1),(-1,1)]);
+            spawn_block(&mut commands, 1, center+1, &main_window, &texture,[(1,-1), (-1,-1), (-1,1),(1,1)]);
         },
     }
     mino_selector.selecter += 1;
@@ -300,12 +288,12 @@ pub fn mino_movement(
                 c.side += c.rotation_mode[c.rotation_state].1;
             }
             if rotation_left {
-                c.rotation_state -= 1;
-                if c.rotation_state >= 4{
-                    c.rotation_state = 3;
-                }
                 c.line -= c.rotation_mode[c.rotation_state].0;
                 c.side -= c.rotation_mode[c.rotation_state].1;
+                if c.rotation_state == 0{
+                    c.rotation_state = 4;
+                }
+                c.rotation_state -= 1;
             }
             c.is_controll = false;
 
@@ -329,12 +317,12 @@ pub fn mino_movement(
                 c.side += c.rotation_mode[c.rotation_state].1;
             }
             if rotation_left {
+                c.line -= c.rotation_mode[c.rotation_state].0;
+                c.side -= c.rotation_mode[c.rotation_state].1;
                 if c.rotation_state == 0{
                     c.rotation_state = 4;
                 }
                 c.rotation_state -= 1;
-                c.line -= c.rotation_mode[c.rotation_state].0;
-                c.side -= c.rotation_mode[c.rotation_state].1;
             }
             t.translation.x = (c.side * 32) as f32 + 16.0;
             t.translation.y = main_window.height() - 16.0 - (c.line * 32) as f32;
