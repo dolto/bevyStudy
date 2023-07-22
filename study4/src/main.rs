@@ -9,6 +9,7 @@ fn main() {
     .add_startup_system(camera_spawn)
     .add_plugin(MinoPlugin)
     .run();
+
 }
 
 pub fn camera_spawn(

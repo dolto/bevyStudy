@@ -1,0 +1,26 @@
+[package]
+name = "beepytalisem"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+bevy = "0.11.0"
+rand = "0.8.5"
+wasm-bindgen = "0.2.74"
+# web-sys = { version = "0.3.56", features = ['console'] }
+[dependencies.web-sys]
+version = "0.3.4"
+features = [
+  'Document',
+  'Element',
+  'HtmlElement',
+  'Node',
+  'Window',
+  'Storage'
+]
+[profile.dev.package."*"]
+opt-level = 3
+
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
