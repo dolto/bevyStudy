@@ -1,3 +1,9 @@
+mod ui;
+mod database;
+
+use bevy_egui::EguiPlugin;
+use database::DataBasePlugin;
+use ui::MainUiPlugin;
 use wasm_bindgen::prelude::*;
 use web_sys::console;
 
@@ -18,49 +24,6 @@ use dirs;
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
-#[derive(Resource, Serialize, Deserialize)]
-struct SaveTheMessage {
-    message: String
-}
-
-// fn setup(mut commands: Commands){
-//     let test_my_message = dirs::config_dir().unwrap().join("my_message");
-//     commands.insert_resource(
-//         Persistent::<SaveTheMessage>::builder()
-//         .name("message")
-//         .format(StorageFormat::Ini)
-//         .path(test_my_message.join("message.ini"))
-//         .default(SaveTheMessage { message: "아직 메세지 입력 안됨".to_string() })
-//         .build()
-//         .expect("failed to initialize your message")
-//     )
-// }
-
-fn setup_web(mut commands: Commands){
-    let config_dir = dirs::config_dir()
-    .map(|native_config_dir| native_config_dir.join("my_message"))
-    .unwrap_or(Path::new("local").join("configuration"));
-
-    commands.insert_resource(
-        Persistent::<SaveTheMessage>::builder()
-        .name("my_message")
-        .format(StorageFormat::Json)
-        .path(config_dir.join("message.json"))
-        .default(SaveTheMessage { message: "아직 메세지 입력 안됨".to_string() })
-        .build()
-        .expect("failed to initialize your message")
-    );
-}
-
-fn load_my_message(
-    message: Res<Persistent<SaveTheMessage>>,
-    check: Res<Input<KeyCode>>
-){
-    if check.just_pressed(KeyCode::A){
-        console::log_1(&JsValue::from_str(&message.message));
-    }
-}
 
 pub fn camera_spawn(
     mut commands: Commands,
@@ -87,12 +50,13 @@ pub fn main_js() -> Result<(), JsValue> {
     #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
 
-
     // Your code goes here!
     console::log_1(&JsValue::from_str("Hello world!"));
 
     App::new()
-    .add_plugins(DefaultPlugins.set(
+    .add_plugins(
+        (
+        DefaultPlugins.set(
         WindowPlugin {
             primary_window: Some(Window{
                 title: "game".into(),
@@ -104,17 +68,22 @@ pub fn main_js() -> Result<(), JsValue> {
                 ..default()
             }),
             ..default()
-        }   
-        ))
+        }
+        ),
+        EguiPlugin
+        )
+    ) //기반 플러그인
+    .add_plugins(
+        (
+            DataBasePlugin,
+            MainUiPlugin,
+        )
+    ) //개발 플러그인
     .add_systems(Startup, 
-    (
-        setup_web,
-        camera_spawn
-    ))
-    .add_systems(Update, 
-    (
-        load_my_message,
-    ))
+        (
+            camera_spawn,
+        )
+    )
     .run();
 
     Ok(())
