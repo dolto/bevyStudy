@@ -3,7 +3,7 @@ mod database;
 
 use bevy_egui::EguiPlugin;
 use database::DataBasePlugin;
-use ui::MainUiPlugin;
+use ui::{MainUiPlugin, ui_elements::WindowBoxPlugin};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
 
@@ -77,6 +77,7 @@ pub fn main_js() -> Result<(), JsValue> {
         (
             DataBasePlugin,
             MainUiPlugin,
+            WindowBoxPlugin
         )
     ) //개발 플러그인
     .add_systems(Startup, 

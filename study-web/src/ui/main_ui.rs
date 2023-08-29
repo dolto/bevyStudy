@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
     window::{PresentMode, WindowLevel, WindowTheme, PrimaryWindow}, core_pipeline::clear_color::ClearColorConfig,
 };
-use bevy_egui::*;
+use bevy_egui::{*, egui::FontDefinitions};
 use bevy_persistent::*;
 use crate::database::test_data::{TestDataState, SaveTheMessage};
 
@@ -68,7 +68,7 @@ pub fn ui_input_command(
     input_key: Res<Input<KeyCode>>,
     mut test_data: ResMut<Persistent<SaveTheMessage>>
 ){
-    if input_key.just_pressed(KeyCode::NumpadEnter){
+    if input_key.just_pressed(KeyCode::Return){
         let mut input_line = console_data.input_line.clone();
         input_line.pop();
         let input_line_vec = input_line.split(" ").collect::<Vec<&str>>();
@@ -104,3 +104,4 @@ pub fn ui_input_command(
         console_data.log.push(format!("{} \n\tresult: {}", input_line, result));
     }
 }
+

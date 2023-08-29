@@ -1,7 +1,8 @@
-mod main_ui;
+pub mod main_ui;
+pub mod ui_elements;
 use main_ui::*;
 use bevy::prelude::*;
-use main_ui::*;
+
 
 pub struct MainUiPlugin;
 impl Plugin for MainUiPlugin {
