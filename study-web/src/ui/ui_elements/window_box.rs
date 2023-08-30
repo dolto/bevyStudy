@@ -4,6 +4,7 @@ use bevy::{prelude::*, input::mouse::MouseMotion, ui::widget::UiImageSize};
 use wasm_bindgen::JsValue;
 use web_sys::console;
 //    mouse: EventReader<MouseMotion>
+
 #[derive(Component)]
 pub struct Windows{
     pub is_move: bool
@@ -37,8 +38,10 @@ pub fn ui_spawn_window_color(
                     position_type: PositionType::Absolute,
                     flex_direction: FlexDirection::Column,
                     overflow: Overflow::clip(),
+                    
                     ..default()
                 },
+                z_index: ZIndex::Local(0),
                 background_color: BackgroundColor(color),
                 ..default()
             },
@@ -258,20 +261,24 @@ pub fn ui_window_move_triger(
     //mut commands: Commands,
     query_child_title: Query<(&Parent, &Interaction), (With<WindowsMoveButton>, Changed<Interaction>)>,
     query_middle_node: Query<&Parent, With<Node>>,
-    mut query_parent_windows: Query<&mut Windows>,
+    mut query_parent_windows: Query<(&mut Windows, &mut ZIndex)>,
 ){
     for (parent, button) in query_child_title.iter() {
         match button {
             Interaction::Pressed => {
+                for (_, mut z) in query_parent_windows.iter_mut(){
+                    *z = ZIndex::Local(0);
+                }
                 let middle_node = query_middle_node.get(parent.get()).unwrap();
-                let mut window = query_parent_windows.get_mut(middle_node.get()).unwrap();
+                let (mut window, mut w_index) = query_parent_windows.get_mut(middle_node.get()).unwrap();
 
                 window.is_move = true;
+                *w_index = ZIndex::Local(1);
                 console::log_1(&JsValue::from_str(format!("타이틀 클릭! {}", window.is_move).as_str()));
             },
             _  => {
                 let middle_node = query_middle_node.get(parent.get()).unwrap();
-                let mut window = query_parent_windows.get_mut(middle_node.get()).unwrap();
+                let (mut window, _) = query_parent_windows.get_mut(middle_node.get()).unwrap();
                 console::log_1(&JsValue::from_str(format!("타이틀 벗어남! {}", window.is_move).as_str()));
 
                 window.is_move = false;

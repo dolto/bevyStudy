@@ -7,6 +7,9 @@ pub struct WindowBoxPlugin;
 impl Plugin for WindowBoxPlugin{
     fn build(&self, app: &mut App) {
         app
+        // .insert_resource(
+
+        // )
         .add_systems(Startup, 
         test_window_spawn
         )
