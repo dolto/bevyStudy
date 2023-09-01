@@ -83,7 +83,7 @@ pub fn ui_spawn_window_color(
                 ppp.spawn(
                     TextBundle::from_section(
                         title, 
-                        TextStyle {font_size: 10., color: Color::BLACK, ..default()}
+                        TextStyle {font: title_font,font_size: 13., color: Color::BLACK}
                     ).with_background_color(Color::GRAY)
                 );
             })
@@ -173,7 +173,7 @@ pub fn ui_spawn_window_image(
                 ppp.spawn(
                     TextBundle::from_section(
                         title, 
-                        TextStyle {font_size: 10., color: Color::BLACK, ..default()}
+                        TextStyle {font: title_font,font_size: 13., color: Color::BLACK}
                     ).with_background_color(Color::GRAY)
                 );
             })
@@ -203,7 +203,7 @@ pub fn test_window_spawn(
     mut commands: Commands,
     asset_server: Res<AssetServer>
 ){
-    let f = asset_server.load("fonts/NotoSansKR-VariableFont_wght.ttf");
+    let f = asset_server.load("fonts/ChosunCentennial.ttf");
     let mut e = Entity::from_bits(0);
     commands.spawn(
         NodeBundle{
@@ -216,11 +216,11 @@ pub fn test_window_spawn(
             ..default()
         }
     ).with_children(|p|{
-        e = ui_spawn_window_color(p, "Test".to_string(), f.clone(), Color::WHITE, 
+        e = ui_spawn_window_color(p, "테스트".to_string(), f.clone(), Color::WHITE, 
         Val::Px(150.), Val::Px(150.), 
         Val::Px(10.), Val::Px(200.));
 
-        ui_spawn_window_color(p, "Test".to_string(), f.clone(), Color::ORANGE, 
+        ui_spawn_window_color(p, "어쩼든 해결!!".to_string(), f.clone(), Color::ORANGE, 
         Val::Px(150.), Val::Px(150.), 
         Val::Px(100.), Val::Px(200.));
     });
