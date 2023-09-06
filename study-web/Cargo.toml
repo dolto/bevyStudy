@@ -52,10 +52,10 @@ console_error_panic_hook = "0.1.5"
 
 # These crates are used for running unit tests.
 [dev-dependencies]
-wasm-bindgen-test = "0.2.45"
-futures = "0.1.27"
+wasm-bindgen-test = "0.3.37"
+futures = "0.3.28"
 js-sys = "0.3.22"
-wasm-bindgen-futures = "0.3.22"
+wasm-bindgen-futures = "0.4.37"
 
 [profile.dev.package."*"]
 opt-level = 3

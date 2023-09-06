@@ -1,6 +1,4 @@
-use std::convert::TryInto;
-
-use bevy::{prelude::*, input::mouse::MouseMotion, ui::widget::UiImageSize};
+use bevy::{prelude::*, input::mouse::MouseMotion};
 use wasm_bindgen::JsValue;
 use web_sys::console;
 //    mouse: EventReader<MouseMotion>
@@ -212,7 +210,7 @@ pub fn test_window_spawn(
                 height: Val::Percent(100.),
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
+            //background_color: BackgroundColor(Color::BLACK),
             ..default()
         }
     ).with_children(|p|{
@@ -247,7 +245,7 @@ pub fn ui_window_remove(
                 let middle_node = query_middle_node.get(parent.get()).unwrap();
                 let window = query_parent_windows.get(middle_node.get()).unwrap();
 
-                console::log_1(&JsValue::from_str(format!("종료버튼 누름").as_str()));
+                //console::log_1(&JsValue::from_str(format!("종료버튼 누름").as_str()));
 
                 commands.entity(window).despawn_recursive();
             },
@@ -274,12 +272,12 @@ pub fn ui_window_move_triger(
 
                 window.is_move = true;
                 *w_index = ZIndex::Local(1);
-                console::log_1(&JsValue::from_str(format!("타이틀 클릭! {}", window.is_move).as_str()));
+                //console::log_1(&JsValue::from_str(format!("타이틀 클릭! {}", window.is_move).as_str()));
             },
             _  => {
                 let middle_node = query_middle_node.get(parent.get()).unwrap();
                 let (mut window, _) = query_parent_windows.get_mut(middle_node.get()).unwrap();
-                console::log_1(&JsValue::from_str(format!("타이틀 벗어남! {}", window.is_move).as_str()));
+                //console::log_1(&JsValue::from_str(format!("타이틀 벗어남! {}", window.is_move).as_str()));
 
                 window.is_move = false;
             }
@@ -305,7 +303,7 @@ pub fn ui_window_move(
             style.left = left;
             style.top = top;
             
-            console::log_1(&JsValue::from_str(format!("x: {:?}, y: {:?}", left, top).as_str()));
+            //console::log_1(&JsValue::from_str(format!("x: {:?}, y: {:?}", left, top).as_str()));
         }
     }
 }

@@ -1,7 +1,8 @@
 pub mod window_box;
+pub mod side_box;
 use bevy::prelude::*;
 
-use self::window_box::*;
+use self::{window_box::*, side_box::*};
 
 pub struct WindowBoxPlugin;
 impl Plugin for WindowBoxPlugin{
@@ -11,13 +12,17 @@ impl Plugin for WindowBoxPlugin{
 
         // )
         .add_systems(Startup, 
-        test_window_spawn
+        //test_window_spawn,
+        ui_test_sidebox
         )
         .add_systems(Update,
             (
                 ui_window_move_triger,
                 ui_window_move,
-                ui_window_remove
+                ui_window_remove,
+                ui_sidebox_toggle,
+                ui_sidebox_anim,
+                ui_sidebox_close
             ) 
         );
     }
