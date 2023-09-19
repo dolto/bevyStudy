@@ -1,11 +1,12 @@
-use bevy::{prelude::*, window::PrimaryWindow};
+use bevy::{prelude::*, window::PrimaryWindow, input::{keyboard::KeyboardInput, ButtonState}};
 use wasm_bindgen::JsValue;
 use web_sys::console;
 
 #[derive(Resource)]
 pub struct TextBoxFocus{
     pub activity: bool,
-    pub focus: Entity
+    pub focus: Entity,
+    pub capslock: bool,
 }
 
 #[derive(Component)]
@@ -93,6 +94,38 @@ pub fn ui_textbox_input(
                     console::log_1(&JsValue::from_str(format!("입력반영 시도 {}", v.clone()).as_str()));
                     value.push_str(v.clone().as_str());
                     break;
+                }
+            }
+        }
+    }
+}
+
+pub fn ui_textbox_input_without_ime(
+    mut query_text_box: Query<(&TextBox, &mut Text, Entity)>,
+    focus: Res<TextBoxFocus>,
+    keycode: Res<Input<KeyCode>>,
+    mut keyboard_evnt: EventReader<ReceivedCharacter>
+){
+    let mut v: Vec<char> = Vec::with_capacity(4);
+    for key in keyboard_evnt.iter(){
+        let k = key.char;
+        v.push(k);
+    }
+    for (textbox, mut text, entity) in query_text_box.iter_mut(){
+        if textbox.enable && focus.activity {
+            if focus.focus == entity{
+                if keycode.just_pressed(KeyCode::Return) {
+                    text.sections[0].value.push_str("\n");
+                }
+                else if keycode.just_pressed(KeyCode::Back) {
+                    text.sections[0].value.pop();
+                }
+                else {
+                    for value in v.iter(){
+                        let ch = value.clone();
+                        console::log_1(&JsValue::from_str(format!("입력하다 {}", ch).as_str()));
+                        text.sections[0].value.push(ch);
+                    }
                 }
             }
         }

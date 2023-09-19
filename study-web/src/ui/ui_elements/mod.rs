@@ -10,7 +10,7 @@ impl Plugin for WindowBoxPlugin{
     fn build(&self, app: &mut App) {
         app
         .insert_resource(
-            TextBoxFocus {activity: false, focus: Entity::from_bits(0)}
+            TextBoxFocus {activity: false, focus: Entity::from_bits(0), capslock: false}
         )
         .add_systems(Startup, 
         //test_window_spawn,
@@ -27,9 +27,10 @@ impl Plugin for WindowBoxPlugin{
                 ui_sidebox_anim,
                 ui_sidebox_close,
 
-                ui_textbox_input,
                 ui_textbox_set_focus,
-                ui_toggle_ime
+                // ui_textbox_input,
+                // ui_toggle_ime,
+                ui_textbox_input_without_ime
             ) 
         );
     }

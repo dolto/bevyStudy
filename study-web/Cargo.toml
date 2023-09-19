@@ -25,22 +25,22 @@ lto = true
 # to interact with JavaScript.
 wasm-bindgen = "0.2.45"
 dirs = "5.0.1"
-bevy = "0.11.0"
+bevy = "0.11.2"
 rand = "0.8.5"
 serde ={ version = "1.0.183", features = ["derive"]}
-serde_json = "1.0.105"
+serde_json = "1.0.107"
 bevy-persistent = { version = "0.3.3", features = ["all"] } #저장 라이브러리
 bevy_egui = "0.21.0" #더 쉬운 ui플러그인
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
 # compared to the default allocator's ~10K. However, it is slower than the default
 # allocator, so it's not enabled by default.
-wee_alloc = { version = "0.4.2", optional = true }
+wee_alloc = { version = "0.4.5", optional = true }
 
 # The `web-sys` crate allows you to interact with the various browser APIs,
 # like the DOM.
 [dependencies.web-sys]
-version = "0.3.22"
+version = "0.3.64"
 features = ["console"]
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
@@ -48,13 +48,13 @@ features = ["console"]
 # all the `std::fmt` and `std::panicking` infrastructure, so it's only enabled
 # in debug mode.
 [target."cfg(debug_assertions)".dependencies]
-console_error_panic_hook = "0.1.5"
+console_error_panic_hook = "0.1.7"
 
 # These crates are used for running unit tests.
 [dev-dependencies]
 wasm-bindgen-test = "0.3.37"
 futures = "0.3.28"
-js-sys = "0.3.22"
+js-sys = "0.3.64"
 wasm-bindgen-futures = "0.4.37"
 
 [profile.dev.package."*"]
