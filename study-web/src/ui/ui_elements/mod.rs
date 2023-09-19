@@ -1,9 +1,10 @@
 pub mod window_box;
 pub mod side_box;
 pub mod text_box;
+pub mod check_box;
 use bevy::prelude::*;
 
-use self::{window_box::*, side_box::*, text_box::*};
+use self::{window_box::*, side_box::*, text_box::*, check_box::*};
 
 pub struct WindowBoxPlugin;
 impl Plugin for WindowBoxPlugin{
@@ -15,7 +16,8 @@ impl Plugin for WindowBoxPlugin{
         .add_systems(Startup, 
         //test_window_spawn,
         //ui_test_sidebox
-        ui_test_textbox
+        //ui_test_textbox
+        ui_test_checkbox
         )
         .add_systems(Update,
             (
@@ -30,7 +32,9 @@ impl Plugin for WindowBoxPlugin{
                 ui_textbox_set_focus,
                 // ui_textbox_input,
                 // ui_toggle_ime,
-                ui_textbox_input_without_ime
+                ui_textbox_input_without_ime,
+
+                ui_checkbox_click
             ) 
         );
     }
