@@ -1,6 +1,4 @@
-use std::fmt::format;
-
-use bevy::{prelude::*, input::mouse::MouseMotion, ecs::query::QueryEntityError};
+use bevy::{prelude::*};
 use wasm_bindgen::JsValue;
 use web_sys::console;
 

@@ -37,14 +37,14 @@ pub fn setup_web(mut commands: Commands){
     );
 }
 
-pub fn load_my_message(
-    message: Res<Persistent<SaveTheMessage>>,
-    check: Res<Input<KeyCode>>
-){
-    if check.just_pressed(KeyCode::A){
-        console::log_1(&JsValue::from_str(&message.message));
-    }
-}
+// pub fn load_my_message(
+//     message: Res<Persistent<SaveTheMessage>>,
+//     check: Res<Input<KeyCode>>
+// ){
+//     if check.just_pressed(KeyCode::A){
+//         console::log_1(&JsValue::from_str(&message.message));
+//     }
+// }
 
 pub fn unload_my_message(
     mut message: ResMut<Persistent<SaveTheMessage>>

@@ -14,11 +14,11 @@ impl Plugin for DataBasePlugin{
                 setup_web,
             )
         )
-        .add_systems(Update, 
-            (
-                load_my_message,
-            )
-        )
+        // .add_systems(Update, 
+        //     (
+        //         load_my_message,
+        //     )
+        // )
         .add_systems(
             OnEnter(TestDataState::Unload), 
             (
