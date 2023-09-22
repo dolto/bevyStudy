@@ -4,13 +4,24 @@ use web_sys::console;
 
 #[derive(Component)]
 pub struct CheckBox{
-    text: String,
+    //text: String,
     checked: bool
 }
 #[derive(Component)]
 pub struct CheckBoxBase;
 #[derive(Component)]
 pub struct CheckBoxVisible;
+
+#[derive(Component)]
+pub struct RadioGroup;
+
+#[derive(Event)]
+pub struct CheckBoxChecked{
+    checkbox_entity: Entity,
+    group_entity: Entity
+}
+#[derive(Event)]
+pub struct CheckBoxSet;
 
 pub fn ui_spawn_check_box(
     commands: &mut ChildBuilder,
@@ -31,7 +42,7 @@ pub fn ui_spawn_check_box(
                 },
                 ..default()
             },
-            CheckBox {checked: checked.clone(), text: text.clone()}
+            CheckBox {checked: checked.clone()}
         )
     ).
     with_children(|base|{
@@ -79,22 +90,84 @@ pub fn ui_spawn_check_box(
 }
 
 pub fn ui_checkbox_click(
-    mut query_checkbox: Query<&mut CheckBox>,
-    query_checkbox_base: Query<(&Parent, &Children, &Interaction), (With<CheckBoxBase>, Changed<Interaction>)>,
-    mut query_checkbox_visible: Query<&mut Visibility, With<CheckBoxVisible>>
+    mut query_checkbox: Query<(&Parent ,&mut CheckBox, Entity)>,
+    query_checkbox_base: Query<(&Parent, &Interaction), (With<CheckBoxBase>, Changed<Interaction>)>,
+    mut checked: EventWriter<CheckBoxChecked>,
+    mut set: EventWriter<CheckBoxSet>
 ){
-    for (parent, children ,interaction) in query_checkbox_base.iter(){
+    for (parent, interaction) in query_checkbox_base.iter(){
         match interaction {
             Interaction::Pressed => {
-                let mut checkbox = query_checkbox.get_mut(parent.get()).unwrap();
-                let mut visible = query_checkbox_visible.get_mut(children[0]).unwrap();
+                let (check_p, mut checkbox, entity) = query_checkbox.get_mut(parent.get()).unwrap();
                 checkbox.checked = !checkbox.checked;
-                *visible = if checkbox.checked {Visibility::Visible} else {Visibility::Hidden};
+                if checkbox.checked{
+                    checked.send(CheckBoxChecked { checkbox_entity: entity, group_entity: check_p.get() });
+                }
+                set.send(CheckBoxSet);
             },
             _ => {},
         }
     }
 }
+
+pub fn ui_checkbox_set_event(
+    query_checkbox: Query<(&Children, &CheckBox)>,
+    query_checkbox_base: Query<&Children, With<CheckBoxBase>>,
+    mut query_checkbox_visible: Query<&mut Visibility>,
+    mut set_ev: EventReader<CheckBoxSet>
+){
+    for _ in set_ev.iter(){
+        for (child,checkbox) in query_checkbox.iter(){
+            let mut base;
+            let mut visible;
+            for c in child.iter(){
+                base = query_checkbox_base.get(c.clone());
+                if base.is_ok(){
+                    visible = query_checkbox_visible.get_mut(base.unwrap()[0]).unwrap();
+                    *visible = if checkbox.checked {
+                        Visibility::Visible
+                    } else {Visibility::Hidden};
+                    break;
+                }
+            }
+            
+        }
+    }
+
+}
+
+pub fn ui_cehckbox_radio_event(
+    query_radio_group: Query<&Children, With<RadioGroup>>,
+    mut query_checkbox: Query<&mut CheckBox>,
+    mut checked_events: EventReader<CheckBoxChecked>,
+    mut set: EventWriter<CheckBoxSet>
+){
+    for ev in checked_events.iter(){
+        let radio_group = query_radio_group.get(ev.group_entity);
+        if radio_group.is_ok(){
+            let _radio_group = radio_group.unwrap();
+            for ch in _radio_group.iter(){
+                if ch.index() != ev.checkbox_entity.index(){
+                    let checkbox = query_checkbox.get_mut(ch.clone());
+                    if checkbox.is_ok(){
+                        let mut _checkbox = checkbox.unwrap();
+                        _checkbox.checked = false;
+                    }
+                }
+            }
+        }
+
+        set.send(CheckBoxSet);
+    }
+}
+
+// pub fn ui_checkbox_change_text(
+//     mut query_checkbox: Query<(&CheckBox, &mut Text), Changed<CheckBox>>
+// ){
+//     for (checkbox, mut text) in query_checkbox.iter_mut(){
+//         text.sections[0].value = checkbox.text.clone(); //최적화에 문제가 될 수도 있기 때문에 동기화는 굳이 안함
+//     }
+// }
 
 pub fn ui_test_checkbox(
     mut commands: Commands,
@@ -104,20 +177,25 @@ pub fn ui_test_checkbox(
 
     //let mut checkbox = Entity::from_bits(0);
     commands.spawn(
-        NodeBundle{
-            style: Style{
-                width: Val::Percent(100.),
-                height: Val::Percent(50.),
-                margin: UiRect::top(Val::Percent(60.)),
-                overflow: Overflow::visible(),
+        (
+            NodeBundle{
+                style: Style{
+                    width: Val::Percent(100.),
+                    height: Val::Percent(50.),
+                    margin: UiRect::top(Val::Percent(60.)),
+                    overflow: Overflow::visible(),
+                    ..default()
+                },
+                background_color: BackgroundColor(Color::BLACK),
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
-            ..default()
-        }
+            RadioGroup
+        )
+        
     ).with_children(|p|{
-        ui_spawn_check_box(p, "test check box1".to_string(), false, font.clone(), Color::WHITE);
-        ui_spawn_check_box(p, "test check box2".to_string(), false, font.clone(), Color::BLUE);
-        ui_spawn_check_box(p, "test check box3".to_string(), false, font.clone(), Color::GREEN);
+        ui_spawn_check_box(p, "test Radio box1".to_string(), false,font.clone(), Color::WHITE);
+        ui_spawn_check_box(p, "test Radio box2".to_string(), false,font.clone(), Color::BLUE);
+        ui_spawn_check_box(p, "test Radio box3".to_string(), false,font.clone(), Color::GREEN);
     });
 }
+

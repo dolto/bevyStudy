@@ -13,6 +13,8 @@ impl Plugin for WindowBoxPlugin{
         .insert_resource(
             TextBoxFocus {activity: false, focus: Entity::from_bits(0), capslock: false}
         )
+        .add_event::<CheckBoxChecked>()
+        .add_event::<CheckBoxSet>()
         .add_systems(Startup, 
         //test_window_spawn,
         //ui_test_sidebox
@@ -34,7 +36,9 @@ impl Plugin for WindowBoxPlugin{
                 // ui_toggle_ime,
                 ui_textbox_input_without_ime,
 
-                ui_checkbox_click
+                ui_checkbox_click,
+                ui_checkbox_set_event,
+                ui_cehckbox_radio_event,
             ) 
         );
     }
