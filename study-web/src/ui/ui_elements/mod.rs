@@ -15,12 +15,12 @@ impl Plugin for WindowBoxPlugin{
         )
         .add_event::<CheckBoxChecked>()
         .add_event::<CheckBoxSet>()
-        .add_systems(Startup, 
-        //test_window_spawn,
-        //ui_test_sidebox
-        //ui_test_textbox
-        ui_test_checkbox
-        )
+        // .add_systems(Startup, 
+        // //test_window_spawn,
+        // //ui_test_sidebox
+        // //ui_test_textbox
+        // //ui_test_checkbox
+        // )
         .add_systems(Update,
             (
                 ui_window_move_triger,

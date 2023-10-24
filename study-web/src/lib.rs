@@ -1,8 +1,10 @@
 mod ui;
 mod database;
+mod graphics_3d;
 
 use bevy_egui::EguiPlugin;
 use database::DataBasePlugin;
+use graphics_3d::Graphics3dPlugins;
 use ui::{MainUiPlugin, ui_elements::WindowBoxPlugin};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
@@ -31,12 +33,10 @@ pub fn camera_spawn(
 ){
     let window = window_query.get_single().unwrap();
     commands.spawn(
-        Camera2dBundle{
+        Camera3dBundle{
             transform: Transform::from_xyz(
-                window.width()/2.0
-                , window.height()/2.0
-                , 0.0
-            ),
+                0.,1.5,6.
+            ).looking_at(Vec3::ZERO, Vec3::Y),
             ..default()
         }
     );
@@ -77,7 +77,8 @@ pub fn main_js() -> Result<(), JsValue> {
         (
             DataBasePlugin,
             MainUiPlugin,
-            WindowBoxPlugin
+            WindowBoxPlugin,
+            Graphics3dPlugins
         )
     ) //개발 플러그인
     .add_systems(Startup, 
