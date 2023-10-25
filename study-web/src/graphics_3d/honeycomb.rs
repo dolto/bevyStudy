@@ -1,7 +1,7 @@
 use std::{f32::consts::PI, collections::{HashMap, HashSet}};
 
 use bevy::{prelude::*, render::render_resource::{PrimitiveTopology, encase::rts_array::Length}, window::PrimaryWindow};
-use bevy_mod_picking::{PickableBundle, prelude::{Pointer, On, Move, Listener, Over, Out, RaycastPickTarget, Click, PointerButton}, focus::HoverMap};
+use bevy_mod_picking::{PickableBundle, prelude::{Pointer, On, Listener, Over, Out, RaycastPickTarget, Click, PointerButton}};
 use hexx::{*, algorithms::a_star};
 use rand::Rng;
 use wasm_bindgen::JsValue;
@@ -172,10 +172,14 @@ fn on_out(
     grid: Res<Map>,
 ){
     //console::log_1(&JsValue::from_str("out이벤트!"));
-    if grid.blocked_coords.get(&grid.entities_forentity[&event.target]).is_some(){
+    let entity_hex = &grid.entities_forentity[&event.target];
+    if grid.blocked_coords.contains(entity_hex){
         commands.entity(event.target).insert(grid.blocked_mat.clone());
     }
-    else if grid.path_entities.get(&event.target).is_some(){
+    else if grid.pathlist_hex.contains(entity_hex){
+        commands.entity(event.target).insert(grid.path_list_mat.clone());
+    }
+    else if grid.path_entities.contains(&event.target){
         commands.entity(event.target).insert(grid.path_mat.clone());
     }
     else{
