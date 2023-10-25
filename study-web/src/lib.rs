@@ -3,6 +3,7 @@ mod database;
 mod graphics_3d;
 
 use bevy_egui::EguiPlugin;
+use bevy_mod_picking::{DefaultPickingPlugins, prelude::RaycastPickCamera};
 use database::DataBasePlugin;
 use graphics_3d::Graphics3dPlugins;
 use ui::{MainUiPlugin, ui_elements::WindowBoxPlugin};
@@ -29,17 +30,16 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 pub fn camera_spawn(
     mut commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>
 ){
-    let window = window_query.get_single().unwrap();
-    commands.spawn(
+    commands.spawn((
         Camera3dBundle{
             transform: Transform::from_xyz(
-                0.,1.5,6.
+                0.,5.,15.
             ).looking_at(Vec3::ZERO, Vec3::Y),
             ..default()
-        }
-    );
+        },
+        RaycastPickCamera::default(),
+    ));
 }
 
 // This is like the `main` function, except for JavaScript.
@@ -70,7 +70,8 @@ pub fn main_js() -> Result<(), JsValue> {
             ..default()
         }
         ),
-        EguiPlugin
+        EguiPlugin,
+        DefaultPickingPlugins
         )
     ) //기반 플러그인
     .add_plugins(

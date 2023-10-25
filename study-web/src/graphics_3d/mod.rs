@@ -1,9 +1,10 @@
+mod honeycomb_old;
 mod honeycomb;
 mod rim;
 
 use bevy::prelude::*;
 
-use self::honeycomb::{HuneycombRes, spawn_huneycomb, HuneycombSpawnState, set_huneycomb_node};
+use self::honeycomb_old::{HuneycombRes, spawn_huneycomb, HuneycombSpawnState, set_huneycomb_node};
 
 fn spawn_light(
     mut commands: Commands
@@ -31,19 +32,21 @@ pub struct Graphics3dPlugins;
 impl Plugin for Graphics3dPlugins{
     fn build(&self, app: &mut App) {
         app
-        .init_resource::<HuneycombRes>()
-        .add_state::<HuneycombSpawnState>()
+        // .init_resource::<HuneycombRes>()
+        // .add_state::<HuneycombSpawnState>()
         .add_systems(Startup, (
             spawn_light,
+            honeycomb::setup_grid
         ))
-        .add_systems(Update, (
-            camera_spin,
-        ))
-        .add_systems(Update, (
-            spawn_huneycomb,
-        ).after(set_huneycomb_node).run_if(state_exists_and_equals(HuneycombSpawnState::IsSpawn)))
-        .add_systems(Update, (
-            set_huneycomb_node
-        ).run_if(state_exists_and_equals(HuneycombSpawnState::IsSpawn)));
+        ;
+        // .add_systems(Update, (
+        //     camera_spin,
+        // ))
+        // .add_systems(Update, (
+        //     spawn_huneycomb,
+        // ).after(set_huneycomb_node).run_if(state_exists_and_equals(HuneycombSpawnState::IsSpawn)))
+        // .add_systems(Update, (
+        //     set_huneycomb_node
+        // ).run_if(state_exists_and_equals(HuneycombSpawnState::IsSpawn)));
     }
 }
