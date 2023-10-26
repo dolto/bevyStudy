@@ -6,12 +6,16 @@ const dist = path.resolve(__dirname, "./dist");
 
 module.exports = {
   mode: "production",
+  devtool: 'source-map',
   entry: {
     index: "./js/index.js"
   },
   output: {
     path: dist,
     filename: "[name].js"
+  },
+  experiments: {
+    asyncWebAssembly: true, // 또는 syncWebAssembly: true
   },
   devServer: {
     contentBase: dist,
@@ -45,12 +49,17 @@ module.exports = {
   //   ]
   // },
   plugins: [
-    new CopyPlugin([
-      path.resolve(__dirname, "static")
-    ]),
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, "static"), to: dist } // Modify the 'from' and 'to' paths accordingly
+      ],
+    }),
 
     new WasmPackPlugin({
       crateDirectory: __dirname,
     }),
   ]
 };
+// [
+//   path.resolve(__dirname, "static")
+// ]

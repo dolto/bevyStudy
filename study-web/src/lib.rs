@@ -3,7 +3,7 @@ mod database;
 mod graphics_3d;
 
 use bevy_egui::EguiPlugin;
-use bevy_mod_picking::{DefaultPickingPlugins, prelude::{RaycastPickCamera, DebugPickingPlugin, DefaultHighlightingPlugin}, selection::SelectionPlugin};
+use bevy_mod_picking::{DefaultPickingPlugins, prelude::{RaycastPickCamera}};
 use database::DataBasePlugin;
 use graphics_3d::Graphics3dPlugins;
 use ui::{MainUiPlugin, ui_elements::WindowBoxPlugin};
@@ -72,9 +72,9 @@ pub fn main_js() -> Result<(), JsValue> {
         ),
         EguiPlugin,
         DefaultPickingPlugins.build()
-        .disable::<DebugPickingPlugin>()
-        .disable::<DefaultHighlightingPlugin>()
-        .disable::<SelectionPlugin>()
+        // .disable::<DebugPickingPlugin>()
+        // .disable::<DefaultHighlightingPlugin>()
+        // .disable::<SelectionPlugin>()
         )
     ) //기반 플러그인
     .add_plugins(
