@@ -18,7 +18,16 @@ module.exports = {
     asyncWebAssembly: true, // 또는 syncWebAssembly: true
   },
   devServer: {
-    contentBase: dist,
+    static: {
+      directory: dist
+    },
+    compress: true,
+    port: 8080,
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
   },
   // resolve: {
   //   extensions: [".png", ".ttf",".js"],

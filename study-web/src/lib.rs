@@ -1,9 +1,11 @@
 mod ui;
 mod database;
 mod graphics_3d;
+mod camera_controll;
 
 use bevy_egui::EguiPlugin;
 use bevy_mod_picking::{DefaultPickingPlugins, prelude::{RaycastPickCamera}};
+use camera_controll::CameraControllPlugin;
 use database::DataBasePlugin;
 use graphics_3d::Graphics3dPlugins;
 use ui::{MainUiPlugin, ui_elements::WindowBoxPlugin};
@@ -27,20 +29,6 @@ use dirs;
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
-pub fn camera_spawn(
-    mut commands: Commands,
-){
-    commands.spawn((
-        Camera3dBundle{
-            transform: Transform::from_xyz(
-                0.,5.,15.
-            ).looking_at(Vec3::ZERO, Vec3::Y),
-            ..default()
-        },
-        RaycastPickCamera::default(),
-    ));
-}
 
 // This is like the `main` function, except for JavaScript.
 #[wasm_bindgen(start)]
@@ -79,17 +67,18 @@ pub fn main_js() -> Result<(), JsValue> {
     ) //기반 플러그인
     .add_plugins(
         (
+            CameraControllPlugin,
             DataBasePlugin,
             MainUiPlugin,
             WindowBoxPlugin,
             Graphics3dPlugins
         )
     ) //개발 플러그인
-    .add_systems(Startup, 
-        (
-            camera_spawn,
-        )
-    )
+    // .add_systems(Startup, 
+    //     (
+    //         camera_spawn,
+    //     )
+    // )
     .run();
 
     Ok(())
