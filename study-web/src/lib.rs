@@ -2,8 +2,10 @@ mod ui;
 mod database;
 mod graphics_3d;
 mod camera_controll;
+mod bevy_main;
 
 use bevy_egui::EguiPlugin;
+use bevy_main::bevy_run;
 use bevy_mod_picking::{DefaultPickingPlugins, prelude::{RaycastPickCamera}};
 use camera_controll::CameraControllPlugin;
 use database::DataBasePlugin;
@@ -39,47 +41,7 @@ pub fn main_js() -> Result<(), JsValue> {
     console_error_panic_hook::set_once();
 
     // Your code goes here!
-    console::log_1(&JsValue::from_str("Hello world!"));
-
-    App::new()
-    .add_plugins(
-        (
-        DefaultPlugins.set(
-        WindowPlugin {
-            primary_window: Some(Window{
-                title: "game".into(),
-                resolution: (393., 851.).into(),
-                present_mode: PresentMode::AutoVsync,
-                fit_canvas_to_parent: false,
-                prevent_default_event_handling: false,
-                window_theme: Some(WindowTheme::Dark),
-                ..default()
-            }),
-            ..default()
-        }
-        ),
-        EguiPlugin,
-        DefaultPickingPlugins.build()
-        // .disable::<DebugPickingPlugin>()
-        // .disable::<DefaultHighlightingPlugin>()
-        // .disable::<SelectionPlugin>()
-        )
-    ) //기반 플러그인
-    .add_plugins(
-        (
-            CameraControllPlugin,
-            DataBasePlugin,
-            MainUiPlugin,
-            WindowBoxPlugin,
-            Graphics3dPlugins
-        )
-    ) //개발 플러그인
-    // .add_systems(Startup, 
-    //     (
-    //         camera_spawn,
-    //     )
-    // )
-    .run();
+    bevy_run();
 
     Ok(())
 }

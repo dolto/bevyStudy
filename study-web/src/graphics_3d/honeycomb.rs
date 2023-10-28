@@ -153,7 +153,7 @@ pub fn setup_grid(
         layout,
         path_list_mat,
     };
-    //console::log_1(&JsValue::from_str(format!("{:?}\n", map).as_str()));
+    //(format!("{:?}\n", map).as_str()));
     commands.insert_resource(map);
 }
 
@@ -162,7 +162,7 @@ fn on_over(
     event: Listener<Pointer<Over>>,
     grid: Res<Map>,
 ){
-    //console::log_1(&JsValue::from_str("over이벤트!"));
+    //("over이벤트!"));
     commands.entity(event.target).insert(grid.path_mat.clone());
 }
 
@@ -171,7 +171,7 @@ fn on_out(
     event: Listener<Pointer<Out>>,
     grid: Res<Map>,
 ){
-    //console::log_1(&JsValue::from_str("out이벤트!"));
+    //("out이벤트!"));
     let entity_hex = &grid.entities_forentity[&event.target];
     if grid.blocked_coords.contains(entity_hex){
         commands.entity(event.target).insert(grid.blocked_mat.clone());
@@ -208,12 +208,11 @@ fn handle_input_node(
                 point = grid.pathlist_hex[i];
             }
             else{
-                console::log_1(&JsValue::from_str("경로를 찾을 수 없었습니다!"));
                 let index = grid.pathlist_hex.len();
                 grid.pathlist_hex.remove( index - 1);
             }
         }
-        //console::log_1(&JsValue::from_str(format!("만들어진 경로: {:?}", path_list).as_str()));
+        //(format!("만들어진 경로: {:?}", path_list).as_str()));
         for p in grid.path_entities.iter(){
             commands.entity(*p).insert(grid.default_mat.clone());
         }
@@ -229,7 +228,6 @@ fn handle_input_node(
         //commands.entity(entity).insert(grid.path_list_mat.clone());
     }
     else if event.button == PointerButton::Secondary{
-        console::log_1(&JsValue::from_str("오른쪽 클릭 테스트"));
     }
     
     

@@ -42,7 +42,7 @@ pub fn setup_web(mut commands: Commands){
 //     check: Res<Input<KeyCode>>
 // ){
 //     if check.just_pressed(KeyCode::A){
-//         console::log_1(&JsValue::from_str(&message.message));
+//         (&message.message));
 //     }
 // }
 

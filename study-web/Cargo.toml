@@ -25,7 +25,7 @@ lto = true
 # to interact with JavaScript.
 wasm-bindgen = "0.2.87"
 dirs = "5.0.1"
-bevy = { version = "0.11.3" } #배포할때 features제거할것
+bevy = { version = "0.11.3" } #features = ["dynamic_linking"] 웹으로 하거나 배포할때 features제거할것
 rand = "0.8.5"
 serde ={ version = "1.0.189", features = ["derive"]}
 serde_json = "1.0.107"

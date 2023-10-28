@@ -54,14 +54,14 @@ pub fn ui_toggle_ime(
     if focus.activity{
         if !window.ime_enabled{
             window.ime_enabled = true;
-            console::log_1(&JsValue::from_str(format!("ime활성화 {}", window.ime_enabled).as_str()));
+            println!("{}", format!("ime활성화 {}", window.ime_enabled).as_str());
             window.ime_position = Vec2::new(window.width() / 2., window.height() / 2.);
         }
     }
     else{
         if window.ime_enabled{
             window.ime_enabled = false;
-            console::log_1(&JsValue::from_str(format!("ime비활성화 {}", window.ime_enabled).as_str()));
+            println!("{}", format!("ime비활성화 {}", window.ime_enabled).as_str());
             window.ime_position = Vec2::new(0., 0.);
         }
     }
@@ -76,14 +76,14 @@ pub fn ui_textbox_input(
     for key in input_key_event.iter(){
         match key {
             Ime::Preedit {value, ..} => {
-                console::log_1(&JsValue::from_str(format!("입력중이다 {}", value).as_str()));
+                println!("{}", format!("입력중이다 {}", value).as_str());
             },
             Ime::Commit { value, .. } => {
-                console::log_1(&JsValue::from_str(format!("입력하다 {}", value).as_str()));
+                println!("{}", format!("입력하다 {}", value).as_str());
                 v.push_str(&value);
             },
-            Ime::Enabled { ..} => {console::log_1(&JsValue::from_str(format!("활성화 중이다").as_str()));},
-            Ime::Disabled { ..} => {console::log_1(&JsValue::from_str(format!("비활성화 중이다").as_str()));},
+            Ime::Enabled { ..} => {println!("{}", format!("활성화 중이다").as_str());},
+            Ime::Disabled { ..} => {println!("{}", format!("비활성화 중이다").as_str());},
         }
     }
     for (text_box, mut secction, entity) in query_text_box.iter_mut(){
@@ -91,7 +91,7 @@ pub fn ui_textbox_input(
             if focus.focus == entity{
                 let value = &mut secction.sections[0].value;
                 if value.len() < text_box.max_textsize{
-                    console::log_1(&JsValue::from_str(format!("입력반영 시도 {}", v.clone()).as_str()));
+                    println!("{}", format!("입력반영 시도 {}", v.clone()).as_str());
                     value.push_str(v.clone().as_str());
                     break;
                 }
@@ -123,7 +123,7 @@ pub fn ui_textbox_input_without_ime(
                 else {
                     for value in v.iter(){
                         let ch = value.clone();
-                        console::log_1(&JsValue::from_str(format!("입력하다 {}", ch).as_str()));
+                        println!("{}", format!("입력하다 {}", ch).as_str());
                         text.sections[0].value.push(ch);
                     }
                 }
@@ -142,7 +142,7 @@ pub fn ui_textbox_set_focus(
         for (inter, entity) in query_text_box.iter_mut(){
             match inter {
                 Interaction::Pressed => {
-                    console::log_1(&JsValue::from_str("text box포커스 활성화"));
+                    println!("text box포커스 활성화");
                     focus.activity = true;
                     focus.focus = entity;
                     f = true;

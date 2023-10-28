@@ -150,7 +150,6 @@ pub fn spawn_huneycomb(
             huneycomb
         )
     );
-    console::log_1(&JsValue::from_str("생성완료"));
 }
 
 pub fn set_huneycomb_node(
@@ -176,8 +175,6 @@ pub fn set_huneycomb_node(
     for (h, _, _) in query_honeycomb.iter(){
         for (v, _) in h.get_rims().iter(){
             huneycomb_res.spawn_position = v.clone();
-            console::log_1(&JsValue::from_str("비어있는 자리 선정"));
-            console::log_1(&JsValue::from_str(format!("t:{:?}",v.clone()).as_str()));
             set_pos = true;
             break;
         }
@@ -186,7 +183,6 @@ pub fn set_huneycomb_node(
         }
     }
     if huneycomb_res.spawn_count > 1{
-        console::log_1(&JsValue::from_str("생성 이벤트"));
         //events_huneycomb_spawn.send(HuneycombSpawnEventAfter);
         huneycomb_res.spawn_count -= 1;
     }

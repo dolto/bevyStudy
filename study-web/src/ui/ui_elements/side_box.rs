@@ -232,7 +232,6 @@ pub fn ui_sidebox_toggle(
                 if sidebox.time < 0. {
                     continue;
                 }
-                console::log_1(&JsValue::from_str("닫기버튼 누름 성공"));
                 if sidebox.is_closed {
                     sidebox.max_size = sidebox.save_max_size;
                     sidebox.is_closed = false;
@@ -250,7 +249,7 @@ pub fn ui_sidebox_anim(
     time: Res<Time>,
     mut query_sidebox: Query<(&mut SideBox, &mut Style)>
 ){
-    //console::log_1(&JsValue::from_str(format!("{}", time.delta_seconds()).as_str()));
+    //(format!("{}", time.delta_seconds()).as_str()));
     let delta = time.delta_seconds();
     for (mut sidebox, mut style) in query_sidebox.iter_mut() {
         if sidebox.is_dead{
@@ -287,7 +286,6 @@ pub fn ui_sidebox_close(
     for (entity, sidebox) in query_sidebox_entity.iter() {
         if sidebox.is_dead {
             if sidebox.size <= 5.1 {
-                console::log_1(&JsValue::from_str("entity를 죽이기 위해서..."));
                 commands.entity(entity).despawn_recursive();
             }
         }
